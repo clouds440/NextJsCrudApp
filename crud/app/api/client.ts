@@ -32,6 +32,9 @@ export const usersAPI = {
   // Permanent delete user
   permanentDelete: (id: string) => apiClient.delete(`/users/permanent/${id}`),
 
+  // Enable user
+  enable: (id: string) => apiClient.post(`/users/enable/${id}`),
+
   // Search users
   search: (query: string, page = 1, limit = 10) =>
     apiClient.get('/users/search', {

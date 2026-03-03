@@ -94,6 +94,7 @@ router.get('/:id', userController.getUserById);
 router.post('/', validateUser, validationMiddleware, userController.createUser);
 router.put('/:id', validateUserUpdate, validationMiddleware, userController.updateUser);
 router.delete('/permanent/:id', userController.permanentDeleteUser);
+router.post('/enable/:id', userController.enableUser);
 router.delete('/:id', userController.deleteUser);
 
 module.exports = router;

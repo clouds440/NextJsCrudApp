@@ -10,12 +10,12 @@ exports.getAllUsers = async (req, res, next) => {
     const sortObj = {};
     sortObj[sortBy] = sortOrder === 'asc' ? 1 : -1;
 
-    const users = await User.find({ isActive: true })
+    const users = await User.find()
       .sort(sortObj)
       .skip(skip)
       .limit(parseInt(limit));
 
-    const total = await User.countDocuments({ isActive: true });
+    const total = await User.countDocuments();
     const totalPages = Math.ceil(total / parseInt(limit));
 
     return sendSuccess(res, HTTP_STATUS.OK, 'Users retrieved successfully', {
@@ -138,6 +138,26 @@ exports.deleteUser = async (req, res, next) => {
     await user.save();
 
     return sendSuccess(res, HTTP_STATUS.OK, 'User deleted successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Enable user
+exports.enableUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return sendError(res, HTTP_STATUS.NOT_FOUND, 'User not found');
+    }
+
+    user.isActive = true;
+    await user.save();
+
+    return sendSuccess(res, HTTP_STATUS.OK, 'User enabled successfully', user);
   } catch (err) {
     next(err);
   }

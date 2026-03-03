@@ -18,13 +18,11 @@ export const SearchUsers = ({ onSearchResults }: SearchProps) => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!searchQuery.trim()) {
-      setError('Please enter a search query');
-      return;
-    }
-
     let result;
-    if (searchType === 'general') {
+    if (!searchQuery.trim()) {
+      result = await executeAPI(usersAPI.getAll(1, 100)); // Fetch all users if search query is empty
+    }
+    else if (searchType === 'general') {
       result = await executeAPI(usersAPI.search(searchQuery));
     } else {
       result = await executeAPI(usersAPI.getByCity(searchQuery));
