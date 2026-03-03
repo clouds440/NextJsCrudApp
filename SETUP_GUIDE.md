@@ -118,6 +118,10 @@
 ### Step 4: Test the Application
 
 #### Create a User
+1. Admins must log in before creating users:
+   - Navigate to **Admin Login** (link appears in the header) and enter the credentials you created via the backend register endpoint.
+   - After a successful login the "➕ Create User" tab becomes available.
+
 1. Click on "➕ Create User" tab
 2. Fill in all required fields:
    - First Name: John

@@ -9,6 +9,15 @@ const apiClient = axios.create({
   }
 });
 
+// attach token automatically if stored
+apiClient.interceptors.request.use((config) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  if (token && config.headers) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Users API
 export const usersAPI = {
   // Get all users
@@ -50,5 +59,14 @@ export const usersAPI = {
   // Get statistics
   getStatistics: () => apiClient.get('/users/statistics/dashboard')
 };
+
+// Auth API
+export const authAPI = {
+  login: (email: string, password: string) =>
+    apiClient.post('/auth/login', { email, password }),
+  register: (email: string, password: string, secret: string) =>
+    apiClient.post('/auth/register', { email, password, secret })
+};
+
 
 export default apiClient;

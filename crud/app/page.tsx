@@ -5,6 +5,8 @@ import { Dashboard } from './components/Dashboard';
 import { UserForm } from './components/UserForm';
 import { UserList } from './components/UserList';
 import { SearchUsers } from './components/SearchUsers';
+import { useAuth } from './context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface User {
   _id: string;
@@ -51,13 +53,40 @@ export default function Home() {
     setActiveTab('users');
   };
 
+  const { isAuthenticated, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">User Management System</h1>
-          <p className="text-gray-600 mt-2">Create, update, and manage users with ease</p>
+        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">User Management System</h1>
+            <p className="text-gray-600 mt-2">Create, update, and manage users with ease</p>
+          </div>
+          <div>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="text-blue-600 hover:underline"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push('/login')}
+                className="text-blue-600 hover:underline"
+              >
+                Admin Login
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -91,16 +120,18 @@ export default function Home() {
           >
             👥 All Users
           </button>
-          <button
-            onClick={() => setActiveTab('create')}
-            className={`px-4 py-3 font-medium transition-colors ${
-              activeTab === 'create'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            ➕ Create User
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={() => setActiveTab('create')}
+              className={`px-4 py-3 font-medium transition-colors ${
+                activeTab === 'create'
+                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              ➕ Create User
+            </button>
+          )}
         </div>
 
         {/* Tab Content */}
@@ -168,7 +199,7 @@ export default function Home() {
               <UserForm user={selectedUser} onSuccess={handleEditSuccess} onCancel={handleEditCancel} />
             </div>
           )}
-        </div>
+        </div> {/* end tab content container */}
       </main>
     </div>
   );

@@ -16,6 +16,7 @@ A professional, full-stack CRUD application with React/Next.js frontend and Node
 - ✅ MongoDB integration
 - ✅ RESTful API design
 - ✅ Responsive design
+- ✅ Admin authentication (login required for creating users)
 
 ## 🚀 Quick Start
 
@@ -44,6 +45,10 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/crud_db?retryWri
 PORT=5000
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:3000
+
+# authentication (admin)
+JWT_SECRET=your_jwt_secret_here
+ADMIN_SECRET=a_registration_secret_used_for_initial_admin_creation
 ```
 
 4. Start the backend server:
@@ -85,7 +90,32 @@ http://localhost:5000/api
 ```
 
 ### Authentication
-No authentication required for this version.
+Only administrators are allowed to create new user records.  An admin must log in to receive a JSON Web Token which is then included on subsequent requests.
+
+**Registering an admin**
+You can create the first administrator by calling the register endpoint with the `ADMIN_SECRET` defined in your `.env` file. Example using curl:
+```bash
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"s3cr3t","secret":"<ADMIN_SECRET>"}'
+```
+
+After registration future admin accounts can also be created the same way (secret is required).
+
+**Logging in**
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "s3cr3t"
+}
+```
+
+A successful response returns a token you should include in an `Authorization: Bearer <token>` header when creating a user.
+
+---
 
 ### Response Format
 
@@ -116,6 +146,20 @@ All API responses follow this format:
 ```
 
 ### Endpoints
+
+#### Authentication
+
+**Register Admin** (requires ADMIN_SECRET)
+```http
+POST /api/auth/register
+```
+
+**Login Admin**
+```http
+POST /api/auth/login
+```
+
+---
 
 #### Get All Users
 ```http

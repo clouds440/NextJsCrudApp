@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const userController = require('../controllers/userController');
 const { validationMiddleware } = require('../middleware/errorHandler');
+const { verifyToken, requireAdmin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -91,7 +92,7 @@ router.get('/by-city', userController.getUsersByCity);
 router.get('/statistics/dashboard', userController.getStatistics);
 router.get('/:id', userController.getUserById);
 
-router.post('/', validateUser, validationMiddleware, userController.createUser);
+router.post('/', verifyToken, requireAdmin, validateUser, validationMiddleware, userController.createUser);
 router.put('/:id', validateUserUpdate, validationMiddleware, userController.updateUser);
 router.delete('/permanent/:id', userController.permanentDeleteUser);
 router.post('/enable/:id', userController.enableUser);
