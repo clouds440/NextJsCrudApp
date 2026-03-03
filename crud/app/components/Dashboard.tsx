@@ -39,7 +39,7 @@ export const Dashboard = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow">
-          <h3 className="text-sm font-medium opacity-90">Total Users</h3>
+          <h3 className="text-sm font-medium opacity-90">Active Users</h3>
           <p className="text-3xl font-bold mt-2">{stats.totalUsers}</p>
         </div>
         <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-lg shadow">

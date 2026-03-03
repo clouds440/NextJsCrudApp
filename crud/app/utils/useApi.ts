@@ -4,15 +4,14 @@ export const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const executeAPI = async (apiCall: Promise<any>) => {
+  const executeAPI = async <T>(apiCall: Promise<{ data: T }>) => {
     setLoading(true);
     setError(null);
     try {
       const response = await apiCall;
       return {
         success: true,
-        data: response.data,
-        message: response.data.message
+        data: response.data
       };
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';

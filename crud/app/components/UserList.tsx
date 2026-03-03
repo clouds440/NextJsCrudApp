@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usersAPI } from '@/app/api/client';
 import { useApi } from '@/app/utils/useApi';
 import { Alert } from './Alert';
+import { useAuth } from '../context/AuthContext';
 
 interface User {
   _id: string;
@@ -31,6 +32,7 @@ export const UserList = ({ onEdit, refreshTrigger }: UserListProps) => {
   });
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [permanentlyDeleteConfirm, setPermanentlyDeleteConfirm] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -156,7 +158,8 @@ export const UserList = ({ onEdit, refreshTrigger }: UserListProps) => {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 text-center">
-                  <div className="flex gap-2 justify-center">
+                  {isAuthenticated? (
+                    <div className="flex gap-2 justify-center">
                     <button
                       onClick={() => onEdit(user)}
                       className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded transition-colors"
@@ -179,6 +182,9 @@ export const UserList = ({ onEdit, refreshTrigger }: UserListProps) => {
                       Delete
                     </button>
                   </div>
+                  ) : (
+                    <span className="text-sm text-gray-500 italic">Login to manage</span>
+                  )}
 
                   {deleteConfirm === user._id && (
                     <div
